@@ -26,6 +26,8 @@ public:
 
 	void CleanUp();
 
+	Tags** GetWorldMatrx() { return worldMatrix; }
+
 private:
 	std::string levelString;
 	std::vector<GameObject*> gameObjects;

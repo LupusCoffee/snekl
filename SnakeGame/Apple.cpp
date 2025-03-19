@@ -1,12 +1,8 @@
 #include "Apple.h"
 
 Apple::Apple(int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
+: GameObject(x,y,tags,bgColor,patternColor,pattern)
 {
-	SetPosition(x, y);
-	this->tags = tags;
-	this->bgColor = bgColor;
-	this->patternColor = patternColor;
-	this->pattern = pattern;
 }
 
 Apple::~Apple()

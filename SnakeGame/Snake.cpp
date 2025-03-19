@@ -3,15 +3,8 @@
 #include "Game.h"
 
 Snake::Snake(PlayerAgent* brain, float speed, int tailStartLength, int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
-: brain(brain), speed(speed), speedTimer(0), direction(Vector2(0, 1))
+: GameObject(x,y,tags,bgColor,patternColor, pattern), brain(brain), speed(speed), speedTimer(0), direction(Vector2(0, 1))
 {
-	//stuff already set from before
-	SetPosition(x, y);
-	this->tags = tags;
-	this->bgColor = bgColor;
-	this->patternColor = patternColor;
-	this->pattern = pattern;
-
 	AddTail(tailStartLength);
 }
 Snake::~Snake()
