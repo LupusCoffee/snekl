@@ -15,7 +15,6 @@ bool GameState::Init()
 
 void GameState::Update()
 {
-	scene.CheckForObjectCollisions();
 	scene.UpdateGameObjects();
 }
 

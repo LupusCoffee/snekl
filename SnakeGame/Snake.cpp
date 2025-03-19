@@ -2,8 +2,8 @@
 
 #include "Game.h"
 
-Snake::Snake(PlayerAgent* brain, float speed, int tailStartLength, int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
-: GameObject(x,y,tags,bgColor,patternColor, pattern), brain(brain), speed(speed), speedTimer(0), direction(Vector2(0, 1))
+Snake::Snake(Tags** worldMatrix, PlayerAgent* brain, float speed, int tailStartLength, int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
+: GameObject(worldMatrix, x,y,tags,bgColor,patternColor, pattern), worldMatrix(worldMatrix), brain(brain), speed(speed), speedTimer(0), direction(Vector2(0, 1))
 {
 	AddTail(tailStartLength);
 }
@@ -41,19 +41,6 @@ void Snake::Destroy()
 	GameObject::Destroy();
 }
 
-void Snake::OnCollision(GameObject* collisionObj)
-{
-	if (collisionObj->IncludesTag(SNAKE) || collisionObj->IncludesTag(OBSTACLE)) Game::GetInstance().SetState(OUTRO_STATE);
-	if (collisionObj->IncludesTag(COLLECTABLE))
-	{
-		AddTail(1);
-		collisionObj->Destroy();
-		//respawn apple
-	}
-
-	GameObject::OnCollision(collisionObj);
-}
-
 void Snake::MoveTowardsDirection()
 {
 	//move tail
@@ -73,6 +60,8 @@ void Snake::MoveTail()
 			Vector2 parentBodyPos = snakeTail[bodyIndex - 1]->GetPosition();
 			snakeTail[bodyIndex]->SetPosition(parentBodyPos);
 		}
+
+		//set the previous position of the last part of the tail as empty
 	}
 }
 
@@ -80,4 +69,31 @@ void Snake::AddTail(int amount)
 {
 	for (int i = 0; i < amount; ++i)
 		snakeTail.push_back(new SnakeBody(GetPosition().x, GetPosition().y,RED_COLOR));
+}
+
+void Snake::AddToPosition(int x, int y)
+{
+	SetPosition(Vector2(GetPosition()) + Vector2(x, y));
+
+	CheckCollision();
+
+	worldMatrix[GetPosition().x][GetPosition().y] = OBSTACLE_TAG; //doesn't work hmmm
+}
+
+void Snake::AddToPosition(Vector2 vector2)
+{
+	SetPosition(Vector2(GetPosition()) + vector2);
+	CheckCollision();
+}
+
+void Snake::CheckCollision()
+{
+	if (worldMatrix[GetPosition().x][GetPosition().y] == OBSTACLE_TAG) 
+		Game::GetInstance().SetState(OUTRO_STATE);
+
+	if (worldMatrix[GetPosition().x][GetPosition().y] == COLLECTABLE_TAG)
+	{
+		AddTail(1);
+		//somehow get apple and switch its position to another, randomly selected one
+	}
 }

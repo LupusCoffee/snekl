@@ -1,4 +1,5 @@
 #pragma once
+#include "InclusionHelper.h"
 #include "Tools/RenderHelper.h"
 #include "Tools/SnakeGraphics.h"
 
@@ -21,7 +22,7 @@ public:
 class GameObject
 {
 public:
-	GameObject(int x = 0, int y = 0, const std::vector<Tag> tags = {}, Color bgColor = WHITE_COLOR, Color patternColor = WHITE_COLOR, char pattern = ' ');
+	GameObject(Tags** worldMatrix = nullptr, int x = 0, int y = 0, const std::vector<Tag> tags = {}, Color bgColor = WHITE_COLOR, Color patternColor = WHITE_COLOR, char pattern = ' ');
 	virtual ~GameObject();
 
 	virtual void Update();
@@ -29,16 +30,9 @@ public:
 	virtual void Destroy();
 	bool IsDestroy();
 
-	void SetPosition(int x, int y);
-	void SetPosition(Vector2 vector2);
-	void AddToPosition(int x, int y);
-	void AddToPosition(Vector2 vector2);
+	virtual void SetPosition(int x, int y);
+	virtual void SetPosition(Vector2 vector2);
 	const Vector2 GetPosition();
-
-	void AddTag(Tag tag);
-	Tag GetTag(int index) const;
-	bool IncludesTag(Tag tag) const;
-	virtual void OnCollision(GameObject* collisionObj);
 
 protected:
 	bool isDestroyed = false;

@@ -26,7 +26,7 @@ bool World::LoadLevel(Levels level)
 	{
 	case LEVEL1: fileToLoad = "Levels/Level1.txt"; break;
 	case LEVEL2: fileToLoad = "Levels/Level2.txt"; break;
-	case LEVEL3: fileToLoad = "Levels/Level3.txt";	break;
+	case LEVEL3: fileToLoad = "Levels/Level3.txt"; break;
 	}
 
 	//add contents of readFile to levelString
@@ -45,7 +45,10 @@ bool World::RenderLevel()
 	int x = 0, y = 0;
 	for (auto element : levelString)
 	{
-		if (element == ' ') continue;
+		if (element == ' ')
+		{
+			continue;
+		}
 
 		if (x == WORLD_WIDTH || element == '\n')
 		{
@@ -54,9 +57,15 @@ bool World::RenderLevel()
 			continue;
 		}
 
-		if (element == '+') snakeStartPos = Vector2(x,y); //why is this being detected so much???
-
-		if (element == 'X' || element == 'x') Game::GetInstance().GetGraphics()->PlotTile(x, y, 0, OBSTACLE_COLOR, OBSTACLE_COLOR, ' ');
+		if (element == 'X' || element == 'x')
+		{
+			Game::GetInstance().GetGraphics()->PlotTile(x, y, 0, OBSTACLE_COLOR, OBSTACLE_COLOR, ' ');
+			worldMatrix[x][y] = OBSTACLE_TAG;
+		}
+		else if (element == '.')
+		{
+			worldMatrix[x][y] = EMPTY_TAG;
+		}
 		x++;
 	}
 
@@ -68,7 +77,7 @@ bool World::RenderLevel()
 void World::CreateGameObjects()
 {
 	gameObjects.push_back(new Apple(6, 6, {COLLECTABLE}, TURQUOISE_COLOR));
-	gameObjects.push_back(new Snake(playerBrain, 0.3f, 2, 10, 10, {SNAKE}, DARKER_RED_COLOR));
+	gameObjects.push_back(new Snake(GetWorldMatrix(), playerBrain, 0.1f, 5, 10, 10, {SNAKE}, DARKER_RED_COLOR));
 }
 
 void World::UpdateGameObjects()
@@ -103,26 +112,14 @@ void World::KeyDownGameObjects(int Key)
 {
 	playerBrain->KeyDown(Key);
 }
-
-void World::CheckForObjectCollisions()
-{
-	for (auto obj : gameObjects)
-	{
-		for (auto colObj : gameObjects)
-		{
-			if (obj == colObj) continue;
-
-			//if obj and colObj has same position >>> obj.OnCollision(colObj);
-			if (obj->GetPosition().x == colObj->GetPosition().x && obj->GetPosition().y == colObj->GetPosition().y) //need to make an overloaded operator for it
-				obj->OnCollision(colObj);
-		}
-	}
-}
 #pragma endregion
 
 void World::CleanUp()
 {
 	DestroyGameObjects();
+
+	for (int i = 0; i < WORLD_WIDTH; ++i) delete[] worldMatrix[i]; //exiting while this is here fucks shit up
+	delete[] worldMatrix;
 
 	delete playerBrain;
 }

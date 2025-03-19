@@ -1,7 +1,7 @@
 #include "SnakeBody.h"
 
 SnakeBody::SnakeBody(int x, int y, Color color, const std::vector<Tag> tags)
-: GameObject(x,y,tags,color,color,' ')
+: GameObject(nullptr, x,y,tags,color,color,' ')
 {
 }
 

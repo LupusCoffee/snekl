@@ -2,7 +2,7 @@
 #include "Game.h"
 #include <iostream>
 
-GameObject::GameObject(int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
+GameObject::GameObject(Tags** worldMatrix, int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
 : position(Vector2(x, y)), prevPosition(position), tags(tags), bgColor(bgColor), patternColor(patternColor), pattern(pattern)
 {
 }
@@ -50,42 +50,8 @@ void GameObject::SetPosition(Vector2 vector2)
 	position = vector2;
 }
 
-void GameObject::AddToPosition(int x, int y)
-{
-	prevPosition = position;
-	position.x = position.x + x;
-	position.y = position.y + y;
-}
-
-void GameObject::AddToPosition(Vector2 vector2)
-{
-	prevPosition = position;
-	position = position + vector2;
-}
-
 const Vector2 GameObject::GetPosition()
 {
 	return position;
 }
 
-void GameObject::AddTag(Tag tag)
-{
-	tags.push_back(tag);
-}
-
-Tag GameObject::GetTag(int index) const
-{
-	return tags[index];
-}
-
-bool GameObject::IncludesTag(Tag tag) const
-{
-	for (auto element : tags)
-		if (element == tag) return true;
-
-	return false;
-}
-
-void GameObject::OnCollision(GameObject* collisionObj)
-{
-}

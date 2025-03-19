@@ -2,11 +2,11 @@
 #include <string>
 
 #include "GameObject.h"
+#include "InclusionHelper.h"
 #include "PlayerAgent.h"
 #include "Tools/SnakeGraphics.h"
 
 enum Levels { LEVEL1, LEVEL2, LEVEL3 };
-enum Tags { COLLECTABLE_TAG, OBSTACLE_TAG };
 
 //to-do: make inherited world classes, one for each scene
 class World
@@ -16,8 +16,6 @@ public:
 
 	bool RenderLevel();
 
-	void CheckForObjectCollisions();
-
 	void CreateGameObjects();
 	void UpdateGameObjects();
 	void RenderGameObjects();
@@ -26,7 +24,7 @@ public:
 
 	void CleanUp();
 
-	Tags** GetWorldMatrx() { return worldMatrix; }
+	Tags** GetWorldMatrix() const { return worldMatrix; }
 
 private:
 	std::string levelString;
