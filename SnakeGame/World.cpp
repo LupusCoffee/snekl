@@ -1,6 +1,7 @@
 #include "World.h"
 #include "stdafx.h"
 #include <fstream>
+#include <iostream>
 #include <string>
 
 #include "Apple.h"
@@ -11,6 +12,9 @@ World::World(Levels startLevel)
 {
 	LoadLevel(startLevel);
 	playerBrain = new PlayerAgent(38, 40, 37, 39);
+
+	worldMatrix = new Tags*[WORLD_WIDTH];
+	for (int i = 0; i < WORLD_WIDTH; ++i) worldMatrix[i] = new Tags[WORLD_HEIGHT];
 }
 
 #pragma region Handle Level

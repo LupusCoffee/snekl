@@ -36,4 +36,5 @@ private:
 	PlayerAgent* playerBrain;
 
 	//2d array of enums > make all walls "obstacle" positions
+	Tags** worldMatrix;
 };
