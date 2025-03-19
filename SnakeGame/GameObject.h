@@ -1,0 +1,55 @@
+#pragma once
+#include "Tools/RenderHelper.h"
+#include "Tools/SnakeGraphics.h"
+
+enum Tag { OBSTACLE, COLLECTABLE, SNAKE };
+
+struct Vector2
+{
+public:
+	Vector2(int x, int y) : x(x), y(y) {};
+
+	int x = 0;
+	int y = 0;
+
+	const Vector2 operator+ (const Vector2 vector2)
+	{
+		return Vector2(x+vector2.x, y+vector2.y);
+	}
+};
+
+class GameObject
+{
+public:
+	GameObject(int x = 0, int y = 0, const std::vector<Tag> tags = {}, Color bgColor = WHITE_COLOR, Color patternColor = WHITE_COLOR, char pattern = ' ');
+	virtual ~GameObject();
+
+	virtual void Update();
+	virtual void Render();
+	virtual void Destroy();
+	bool IsDestroy();
+
+	void SetPosition(int x, int y);
+	void SetPosition(Vector2 vector2);
+	void AddToPosition(int x, int y);
+	void AddToPosition(Vector2 vector2);
+	const Vector2 GetPosition();
+
+	void AddTag(Tag tag);
+	Tag GetTag(int index) const;
+	bool IncludesTag(Tag tag) const;
+	virtual void OnCollision(GameObject* collisionObj);
+
+protected:
+	bool isDestroyed = false;
+
+	Color bgColor;
+	Color patternColor;
+	char pattern;
+
+	std::vector<Tag> tags;
+
+private:
+	Vector2 position;
+	Vector2 prevPosition;
+};
