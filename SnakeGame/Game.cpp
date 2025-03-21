@@ -29,7 +29,6 @@ void Game::Run()
 
 		Render();
 
-
 		//timer and fps stuff
 		std::chrono::duration<double, std::milli> work_time = std::chrono::system_clock::now() - timer;
 		long timeLeft = (1000 / FPS) - (long)work_time.count();
@@ -116,7 +115,6 @@ void Game::KeyDownCallback(int Key)
 {
 	std::cout << "Keydown: " << Key << "\n";
 
-	//always
 	//escape > close down window
 	if (Key == 27)
 	{

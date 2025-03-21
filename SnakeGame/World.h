@@ -24,7 +24,7 @@ public:
 
 	void CleanUp();
 
-	Tags** GetWorldMatrix() const { return worldMatrix; }
+	WorldTile** GetWorldMatrix() { return worldMatrix; }
 
 private:
 	std::string levelString;
@@ -36,5 +36,5 @@ private:
 	PlayerAgent* playerBrain;
 
 	//2d array of enums > make all walls "obstacle" positions
-	Tags** worldMatrix;
+	WorldTile** worldMatrix;
 };

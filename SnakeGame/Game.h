@@ -34,7 +34,7 @@ private:
 	void operator = (Game const&); //override assignment operator > now you can't make copies of the game class
 	#pragma endregion
 
-	const int FPS = 60;
+	const int FPS = 200;
 
 	SnakeGraphics* m_snakeGraphics = nullptr;
 	float m_deltaTime = 0.0f;

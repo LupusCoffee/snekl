@@ -1,5 +1,5 @@
-#include "World.h"
 #include "stdafx.h"
+#include "World.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -8,13 +8,16 @@
 #include "Game.h"
 #include "Snake.h"
 
+using std::cout;
+
 World::World(Levels startLevel)
 {
+	worldMatrix = new WorldTile*[WORLD_WIDTH];
+	for (int i = 0; i < WORLD_WIDTH; i++) worldMatrix[i] = new WorldTile[WORLD_HEIGHT];
+
+
 	LoadLevel(startLevel);
 	playerBrain = new PlayerAgent(38, 40, 37, 39);
-
-	worldMatrix = new Tags*[WORLD_WIDTH];
-	for (int i = 0; i < WORLD_WIDTH; ++i) worldMatrix[i] = new Tags[WORLD_HEIGHT];
 }
 
 #pragma region Handle Level
@@ -34,6 +37,29 @@ bool World::LoadLevel(Levels level)
 	if (!readFile) return false;
 
 	levelString.assign((std::istreambuf_iterator<char>(readFile)), (std::istreambuf_iterator<char>()));
+
+	if (levelString.size() == 0) return false;
+
+	//set obstacle and empty tags
+	int x = 0, y = 0;
+	int bitchAss = 0;
+	for (auto element : levelString)
+	{
+		if (element == ' ') continue;
+
+		if (element == '\n')
+		{
+			x = 0;
+			y++;
+			continue;
+		}
+
+		if (element == 'X' || element == 'x') worldMatrix[x][y].tag = OBSTACLE_TAG;
+		else if (element == '.') worldMatrix[x][y].tag = EMPTY_TAG;
+		else worldMatrix[x][y].tag = OBSTACLE_TAG;
+		x++;
+	}
+
 	return true;
 }
 
@@ -45,10 +71,7 @@ bool World::RenderLevel()
 	int x = 0, y = 0;
 	for (auto element : levelString)
 	{
-		if (element == ' ')
-		{
-			continue;
-		}
+		if (element == ' ') continue;
 
 		if (x == WORLD_WIDTH || element == '\n')
 		{
@@ -58,14 +81,7 @@ bool World::RenderLevel()
 		}
 
 		if (element == 'X' || element == 'x')
-		{
 			Game::GetInstance().GetGraphics()->PlotTile(x, y, 0, OBSTACLE_COLOR, OBSTACLE_COLOR, ' ');
-			worldMatrix[x][y] = OBSTACLE_TAG;
-		}
-		else if (element == '.')
-		{
-			worldMatrix[x][y] = EMPTY_TAG;
-		}
 		x++;
 	}
 
@@ -76,13 +92,13 @@ bool World::RenderLevel()
 #pragma region Handle GameObjects
 void World::CreateGameObjects()
 {
-	gameObjects.push_back(new Apple(6, 6, {COLLECTABLE}, TURQUOISE_COLOR));
-	gameObjects.push_back(new Snake(GetWorldMatrix(), playerBrain, 0.1f, 5, 10, 10, {SNAKE}, DARKER_RED_COLOR));
+	gameObjects.push_back(new Snake(worldMatrix, playerBrain, 0.1f, 2, 32, 30, { SNAKE }, DARKER_RED_COLOR));
+	gameObjects.push_back(new Apple(worldMatrix, 28, 30, {COLLECTABLE}, TURQUOISE_COLOR));
 }
 
 void World::UpdateGameObjects()
 {
-	for (auto gameObject : gameObjects)
+	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->IsDestroy()) continue;
 		gameObject->Update();
@@ -91,16 +107,25 @@ void World::UpdateGameObjects()
 
 void World::RenderGameObjects()
 {
-	for (auto gameObject : gameObjects)
+	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->IsDestroy()) continue;
 		gameObject->Render();
+	}
+
+	for (int i = 0; i < WORLD_WIDTH; ++i)
+	{
+		for (int j = 0; j < WORLD_HEIGHT; ++j)
+		{
+			if (worldMatrix[i][j].tag == OBSTACLE_TAG)
+				Game::GetInstance().GetGraphics()->PlotTile(i, j, 0, Color(0, 0, 255), WHITE_COLOR, ' ');
+		}
 	}
 }
 
 void World::DestroyGameObjects()
 {
-	for (auto gameObject : gameObjects)
+	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->IsDestroy()) continue;
 		//remove from list
@@ -116,10 +141,27 @@ void World::KeyDownGameObjects(int Key)
 
 void World::CleanUp()
 {
-	DestroyGameObjects();
+	for (int i = 0; i < WORLD_WIDTH; i++)
+	{
+		for (int j = 0; j < WORLD_HEIGHT; j++)
+		{
+			char c = '0';
+			if (worldMatrix[i][j].tag == 0) c = '.';
+			if (worldMatrix[i][j].tag == 2) c = 'X';
 
-	for (int i = 0; i < WORLD_WIDTH; ++i) delete[] worldMatrix[i]; //exiting while this is here fucks shit up
+			cout << c << " ";
+		}
+		cout << "\n";
+	}
+
+	for (int i = 0; i < WORLD_WIDTH; i++)
+	{
+		cout << i;
+		delete[] worldMatrix[i];
+	}
 	delete[] worldMatrix;
+
+	DestroyGameObjects();
 
 	delete playerBrain;
 }

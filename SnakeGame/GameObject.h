@@ -22,7 +22,7 @@ public:
 class GameObject
 {
 public:
-	GameObject(Tags** worldMatrix = nullptr, int x = 0, int y = 0, const std::vector<Tag> tags = {}, Color bgColor = WHITE_COLOR, Color patternColor = WHITE_COLOR, char pattern = ' ');
+	GameObject(WorldTile** worldMatrix = nullptr, int x = 0, int y = 0, const std::vector<Tag> tags = {}, Color bgColor = WHITE_COLOR, Color patternColor = WHITE_COLOR, char pattern = ' ');
 	virtual ~GameObject();
 
 	virtual void Update();
@@ -33,6 +33,7 @@ public:
 	virtual void SetPosition(int x, int y);
 	virtual void SetPosition(Vector2 vector2);
 	const Vector2 GetPosition();
+	const Vector2 GetPreviousPosition();
 
 protected:
 	bool isDestroyed = false;

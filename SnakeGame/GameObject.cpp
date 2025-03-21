@@ -2,7 +2,7 @@
 #include "Game.h"
 #include <iostream>
 
-GameObject::GameObject(Tags** worldMatrix, int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
+GameObject::GameObject(WorldTile** worldMatrix, int x, int y, const std::vector<Tag> tags, Color bgColor, Color patternColor, char pattern)
 : position(Vector2(x, y)), prevPosition(position), tags(tags), bgColor(bgColor), patternColor(patternColor), pattern(pattern)
 {
 }
@@ -53,5 +53,10 @@ void GameObject::SetPosition(Vector2 vector2)
 const Vector2 GameObject::GetPosition()
 {
 	return position;
+}
+
+const Vector2 GameObject::GetPreviousPosition()
+{
+	return prevPosition;
 }
 

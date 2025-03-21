@@ -15,19 +15,19 @@ void PlayerAgent::KeyDown(int Key)
 	#pragma region Handle Direction Input
 	if (Key == keyUp)
 	{
-		direction = Vector2(0, -1);
+		if (direction.y != 1) direction = Vector2(0, -1);
 	}
 	if (Key == keyDown)
 	{
-		direction = Vector2(0, 1);
+		if (direction.y != -1) direction = Vector2(0, 1);
 	}
 	if (Key == keyLeft)
 	{
-		direction = Vector2(-1, 0);
+		if (direction.x != 1) direction = Vector2(-1, 0);
 	}
 	if (Key == keyRight)
 	{
-		direction = Vector2(1, 0);
+		if (direction.x != -1) direction = Vector2(1, 0);
 	}
 	#pragma	endregion
 }

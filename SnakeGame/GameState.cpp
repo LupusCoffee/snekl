@@ -7,7 +7,7 @@
 
 bool GameState::Init()
 {
-	scene = World(LEVEL1);
+	scene = World(LEVEL2);
 	scene.CreateGameObjects();
 
 	return true;
