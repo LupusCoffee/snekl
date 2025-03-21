@@ -115,13 +115,6 @@ void Game::KeyDownCallback(int Key)
 {
 	std::cout << "Keydown: " << Key << "\n";
 
-	//escape > close down window
-	if (Key == 27)
-	{
-		CleanUp();
-		exit(0); //kinda bad?
-	}
-
 	currentState->KeyDown(Key);
 }
 

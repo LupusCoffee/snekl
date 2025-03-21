@@ -11,6 +11,7 @@ Snake::Snake(WorldTile** worldMatrix, PlayerAgent* brain, float speed, int tailS
 }
 Snake::~Snake()
 {
+	std::cout << "Quitting Game Development and Killing Myself - snake \n";
 }
 
 void Snake::Update()
@@ -41,7 +42,7 @@ void Snake::Destroy()
 	//TO-DO: clean up collisions
 
 	for (auto element : snakeTail)
-		element->Destroy();
+		delete element;
 
 	GameObject::Destroy();
 }
@@ -58,30 +59,31 @@ void Snake::CheckCollisions()
 
 	Tags tag = worldMatrix[GetPosition().x][GetPosition().y].tag;
 
-	std::cout << "TAG: " << tag << "\n";
-
-	if ( tag == OBSTACLE_TAG )
+	if ( tag == Tags::OBSTACLE_TAG )
 	{
-		Game::GetInstance().SetState(OUTRO_STATE);
+		Game::GetInstance().SetState(MENU_STATE);
+		worldMatrix = nullptr;
 		return;
 	}
 
-	if ( tag == COLLECTABLE_TAG )
+	if ( tag == Tags::COLLECTABLE_TAG )
 		AddTail(1);
 }
 
 void Snake::SetColliders()
 {
+	std::cout << "bruh";
+
 	if (worldMatrix == nullptr) return;
 
-	worldMatrix[GetPosition().x][GetPosition().y].tag = OBSTACLE_TAG; //set head collider
+	worldMatrix[GetPosition().x][GetPosition().y].tag = Tags::OBSTACLE_TAG; //set head collider
 
 	//set snail tail to obstacles
 	for (int bodyIndex = snakeTail.size() - 1; -1 < bodyIndex; --bodyIndex)
-		worldMatrix[snakeTail[bodyIndex]->GetPosition().x][snakeTail[bodyIndex]->GetPosition().y].tag = OBSTACLE_TAG;
+		worldMatrix[snakeTail[bodyIndex]->GetPosition().x][snakeTail[bodyIndex]->GetPosition().y].tag = Tags::OBSTACLE_TAG;
 
 	//set part before snake tail to empty
-	worldMatrix[GetPrevPosOfLastSnakeTailBody().x][GetPrevPosOfLastSnakeTailBody().y].tag = EMPTY_TAG;
+	worldMatrix[GetPrevPosOfLastSnakeTailBody().x][GetPrevPosOfLastSnakeTailBody().y].tag = Tags::EMPTY_TAG;
 }
 
 void Snake::MoveTail()

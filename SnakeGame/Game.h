@@ -42,7 +42,7 @@ private:
 	//these should actually be in a state machine class
 	std::map <States, BaseState*> availableStatesMap;
 	BaseState* currentState;
-	States defaultState = GAME_STATE;
+	States defaultState = MENU_STATE;
 
 	int currentPoints = 0;
 

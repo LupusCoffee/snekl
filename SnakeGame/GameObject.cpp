@@ -29,12 +29,7 @@ void GameObject::Render()
 void GameObject::Destroy()
 {
 	isDestroyed = true;
-	delete this;
-}
-
-bool GameObject::IsDestroy()
-{
-	return isDestroyed;
+	//delete this;
 }
 
 void GameObject::SetPosition(int x, int y)

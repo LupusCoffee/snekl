@@ -28,7 +28,6 @@ public:
 	virtual void Update();
 	virtual void Render();
 	virtual void Destroy();
-	bool IsDestroy();
 
 	virtual void SetPosition(int x, int y);
 	virtual void SetPosition(Vector2 vector2);

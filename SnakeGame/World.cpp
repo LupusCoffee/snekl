@@ -42,21 +42,20 @@ bool World::LoadLevel(Levels level)
 
 	//set obstacle and empty tags
 	int x = 0, y = 0;
-	int bitchAss = 0;
-	for (auto element : levelString)
+	for (int i = 0; i < levelString.size(); ++i)
 	{
-		if (element == ' ') continue;
+		if (levelString[i] == ' ') continue;
 
-		if (element == '\n')
+		if (levelString[i] == '\n')
 		{
 			x = 0;
 			y++;
 			continue;
 		}
 
-		if (element == 'X' || element == 'x') worldMatrix[x][y].tag = OBSTACLE_TAG;
-		else if (element == '.') worldMatrix[x][y].tag = EMPTY_TAG;
-		else worldMatrix[x][y].tag = OBSTACLE_TAG;
+		if (levelString[i] == 'X' || levelString[i] == 'x') worldMatrix[x][y].tag = Tags::OBSTACLE_TAG;
+		else if (levelString[i] == '.') worldMatrix[x][y].tag = Tags::EMPTY_TAG;
+		else worldMatrix[x][y].tag = Tags::OBSTACLE_TAG;
 		x++;
 	}
 
@@ -69,18 +68,18 @@ bool World::RenderLevel()
 
 	//plot the level string as tiles
 	int x = 0, y = 0;
-	for (auto element : levelString)
+	for (int i = 0; i < levelString.size(); ++i)
 	{
-		if (element == ' ') continue;
+		if (levelString[i] == ' ') continue;
 
-		if (x == WORLD_WIDTH || element == '\n')
+		if (x == WORLD_WIDTH || levelString[i] == '\n')
 		{
 			x = 0;
 			y++;
 			continue;
 		}
 
-		if (element == 'X' || element == 'x')
+		if (levelString[i] == 'X' || levelString[i] == 'x')
 			Game::GetInstance().GetGraphics()->PlotTile(x, y, 0, OBSTACLE_COLOR, OBSTACLE_COLOR, ' ');
 		x++;
 	}
@@ -98,26 +97,24 @@ void World::CreateGameObjects()
 
 void World::UpdateGameObjects()
 {
-	for (auto& gameObject : gameObjects)
+	for (int i = 0; i < gameObjects.size(); ++i)
 	{
-		if (gameObject->IsDestroy()) continue;
-		gameObject->Update();
+		gameObjects[i]->Update();
 	}
 }
 
 void World::RenderGameObjects()
 {
-	for (auto& gameObject : gameObjects)
+	for (int i = 0; i < gameObjects.size(); ++i)
 	{
-		if (gameObject->IsDestroy()) continue;
-		gameObject->Render();
+		gameObjects[i]->Render();
 	}
 
 	for (int i = 0; i < WORLD_WIDTH; ++i)
 	{
 		for (int j = 0; j < WORLD_HEIGHT; ++j)
 		{
-			if (worldMatrix[i][j].tag == OBSTACLE_TAG)
+			if (worldMatrix[i][j].tag == Tags::OBSTACLE_TAG)
 				Game::GetInstance().GetGraphics()->PlotTile(i, j, 0, Color(0, 0, 255), WHITE_COLOR, ' ');
 		}
 	}
@@ -125,12 +122,17 @@ void World::RenderGameObjects()
 
 void World::DestroyGameObjects()
 {
-	for (auto& gameObject : gameObjects)
+	for (int i = 0; i < gameObjects.size(); ++i)
 	{
-		if (gameObject->IsDestroy()) continue;
 		//remove from list
-		gameObject->Destroy();
+
+		gameObjects[i]->Destroy();
+
+		delete gameObjects[i];
+		gameObjects[i] = nullptr;
 	}
+
+	gameObjects.clear();
 }
 
 void World::KeyDownGameObjects(int Key)
@@ -146,22 +148,19 @@ void World::CleanUp()
 		for (int j = 0; j < WORLD_HEIGHT; j++)
 		{
 			char c = '0';
-			if (worldMatrix[i][j].tag == 0) c = '.';
-			if (worldMatrix[i][j].tag == 2) c = 'X';
+			if (worldMatrix[i][j].tag == Tags::EMPTY_TAG) c = '.';
+			if (worldMatrix[i][j].tag == Tags::OBSTACLE_TAG) c = 'X';
 
 			cout << c << " ";
 		}
 		cout << "\n";
 	}
 
-	for (int i = 0; i < WORLD_WIDTH; i++)
-	{
-		cout << i;
-		delete[] worldMatrix[i];
-	}
-	delete[] worldMatrix;
-
 	DestroyGameObjects();
 
 	delete playerBrain;
+	playerBrain = nullptr;
+
+	delete[] worldMatrix;
+	worldMatrix = nullptr;
 }

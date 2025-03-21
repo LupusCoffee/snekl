@@ -25,11 +25,6 @@ void MenuItem::Click()
 	{
 		Game::GetInstance().SetState(GAME_STATE);
 	}
-	if (displayText == L"quit")
-	{
-		//CleanUp(); HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-		exit(0); //kinda bad?
-	}
 }
 
 
